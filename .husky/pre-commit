@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo ""
+echo "Starting pre-push hooks..."
+
+echo ""
+echo "Running Prettier and ESLint on staged files..."
+npx lint-staged
+
+echo ""
+echo "Running TypeScript checks..."
+npx tsc --noEmit
+
+echo ""
+echo "All checks successful."
+echo ""

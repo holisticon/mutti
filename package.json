@@ -1,13 +1,59 @@
 {
-  "private": true,
-  "name": "@holisticon/mutti",
-  "version": "0.0.1",
-  "license": "MIT",
-  "author": "Holisticon AG <info@holisticon.de> (https://holisticon.de)",
-  "description": "Multi Track Timeline",
-  "repository": "github:holisticon/mutti",
-  "keywords": [
-    "Timeline",
-    "Web Components"
-  ]
+	"private": true,
+	"name": "@holisticon/mutti",
+	"version": "0.0.1",
+	"license": "MIT",
+	"author": "Holisticon AG <info@holisticon.de> (https://holisticon.de)",
+	"description": "Multi Track Timeline",
+	"repository": "github:holisticon/mutti",
+	"keywords": [
+		"Timeline",
+		"Web Components"
+	],
+	"main": "./dist/main.js",
+	"module": "./dist/main.js",
+	"types": "./dist/main.d.ts",
+	"files": [
+		"dist",
+		"!**/*.test.*",
+		"README.md",
+		"LICENSE"
+	],
+	"scripts": {
+		"prepare": "husky install",
+		"prepack": "npm run build",
+		"build": "rm -rf dist && tsc -b",
+		"format": "prettier --write .",
+		"lint": "tsc --noEmit && eslint . && prettier -c ."
+	},
+	"lint-staged": {
+		"*": [
+			"prettier --ignore-unknown --write"
+		],
+		"*.{ts,tsx}": [
+			"eslint --fix"
+		]
+	},
+	"commitlint": {
+		"extends": [
+			"@commitlint/config-conventional"
+		]
+	},
+	"dependencies": {
+		"tslib": "^2.4.0"
+	},
+	"devDependencies": {
+		"@commitlint/cli": "^17.0.3",
+		"@commitlint/config-conventional": "^17.0.3",
+		"@typescript-eslint/eslint-plugin": "^5.33.0",
+		"@typescript-eslint/parser": "^5.33.0",
+		"eslint": "^8.21.0",
+		"eslint-plugin-lit": "^1.6.1",
+		"eslint-plugin-lit-a11y": "^2.2.2",
+		"eslint-plugin-wc": "^1.3.2",
+		"husky": "^8.0.0",
+		"lint-staged": "^13.0.3",
+		"prettier": "^2.7.1",
+		"typescript": "^4.7.4"
+	}
 }

@@ -1,0 +1,40 @@
+{
+	"compilerOptions": {
+		/* Language and Environment */
+		"target": "ES2020",
+		"lib": ["DOM", "ES2020"],
+		"experimentalDecorators": true,
+
+		/* Modules */
+		"module": "ES2020",
+		"rootDir": "./src",
+		"isolatedModules": true,
+		"moduleResolution": "node",
+		"resolveJsonModule": true,
+
+		/* Emit */
+		"outDir": "./dist",
+		"declaration": true,
+		"sourceMap": true,
+		"importsNotUsedAsValues": "error",
+		"importHelpers": true,
+
+		/* Interop Constraints */
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+
+		/* Type Checking */
+		"strict": true,
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitOverride": true,
+		"noImplicitReturns": true,
+		"noUncheckedIndexedAccess": true,
+		"allowUnreachableCode": false,
+
+		/* Completeness */
+		"skipDefaultLibCheck": true,
+		"skipLibCheck": true,
+		"allowJs": false
+	},
+	"include": ["src"]
+}
