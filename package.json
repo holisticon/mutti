@@ -1,0 +1,13 @@
+{
+  "private": true,
+  "name": "@holisticon/mutti",
+  "version": "0.0.1",
+  "license": "MIT",
+  "author": "Holisticon AG <info@holisticon.de> (https://holisticon.de)",
+  "description": "Multi Track Timeline",
+  "repository": "github:holisticon/mutti",
+  "keywords": [
+    "Timeline",
+    "Web Components"
+  ]
+}
