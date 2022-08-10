@@ -1,4 +1,7 @@
 {
 	"typescript.preferences.importModuleSpecifierEnding": "js",
-	"jest.nodeEnv": { "NODE_OPTIONS": "--experimental-vm-modules" }
+	"jest.nodeEnv": {
+		"NODE_OPTIONS": "--experimental-vm-modules"
+	},
+	"cSpell.words": ["mutti"]
 }
