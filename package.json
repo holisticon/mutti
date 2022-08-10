@@ -17,6 +17,7 @@
 	"files": [
 		"dist",
 		"!**/*.test.*",
+		"!**/test-utils/*",
 		"README.md",
 		"LICENSE"
 	],
