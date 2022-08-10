@@ -1,3 +1,4 @@
 {
-	"typescript.preferences.importModuleSpecifierEnding": "js"
+	"typescript.preferences.importModuleSpecifierEnding": "js",
+	"jest.nodeEnv": { "NODE_OPTIONS": "--experimental-vm-modules" }
 }
