@@ -7,7 +7,7 @@
 
 		/* Modules */
 		"module": "ES2020",
-		"rootDir": "./src",
+		"rootDir": ".",
 		"isolatedModules": true,
 		"moduleResolution": "node",
 		"resolveJsonModule": true,
@@ -36,5 +36,5 @@
 		"skipLibCheck": true,
 		"allowJs": false
 	},
-	"include": ["src"]
+	"include": ["src", "test"]
 }

@@ -24,7 +24,11 @@
 		"prepack": "npm run build",
 		"build": "rm -rf dist && tsc -b",
 		"format": "prettier --write .",
-		"lint": "tsc --noEmit && eslint . && prettier -c ."
+		"lint": "tsc --noEmit && eslint . && prettier -c .",
+		"playwright": "playwright test",
+		"playwright:headed": "playwright test --headed",
+		"playwright:debug": "PWDEBUG=1 playwright test --workers=1",
+		"serve": "web-dev-server"
 	},
 	"lint-staged": {
 		"*": [
@@ -46,8 +50,12 @@
 	"devDependencies": {
 		"@commitlint/cli": "^17.0.3",
 		"@commitlint/config-conventional": "^17.0.3",
+		"@faker-js/faker": "^7.4.0",
+		"@playwright/test": "^1.24.2",
 		"@typescript-eslint/eslint-plugin": "^5.33.0",
 		"@typescript-eslint/parser": "^5.33.0",
+		"@web/dev-server": "^0.1.33",
+		"@web/dev-server-esbuild": "^0.3.2",
 		"eslint": "^8.21.0",
 		"eslint-plugin-lit": "^1.6.1",
 		"eslint-plugin-lit-a11y": "^2.2.2",

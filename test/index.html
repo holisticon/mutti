@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Mutti - Multi Track Timeline</title>
+		<!-- The import will be transformed by web-dev-server. -->
+		<script type="module" src="../src/main.ts"></script>
+	</head>
+	<body>
+		<main style="height: 100vh" id="root"></main>
+
+		<script type="module">
+			import { render, html } from "lit";
+			import { map } from "lit/directives/map.js";
+			const root = document.querySelector("#root");
+
+			// Assumes that track is of type Track from 'data.js'
+			window.renderTimeline = (tracks) => {
+				const template = html`
+					<mutti-timeline>
+						${map(
+							tracks,
+							(track) => html`
+								<mutti-track>
+									<mutti-label>${track.children}</mutti-label>
+									${map(
+										track.items,
+										(item) => html`
+											<mutti-item start=${item.startDate} end=${item.endDate}>
+												<span>${item.children}</span>
+											</mutti-item>
+										`
+									)}
+								</mutti-track>
+							`
+						)}
+					</mutti-timeline>
+				`;
+				render(template, root);
+			};
+			window.clearTimeline = () => {
+				root.replaceChildren();
+			};
+		</script>
+	</body>
+</html>
