@@ -7,6 +7,7 @@ const config = {
 		"^.+\\.(t|j)sx?$": ["@swc/jest"],
 	},
 	extensionsToTreatAsEsm: [".ts"],
+	setupFilesAfterEnv: ["<rootDir>/src/test-utils/setup.ts"],
 };
 
 export default config;
