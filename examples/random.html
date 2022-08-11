@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Mutti - Multi Track Timeline</title>
+		<script type="module" src="../dist/main.js"></script>
+		<style>
+			.item {
+				cursor: pointer;
+				padding: 8px;
+				border-radius: 4px;
+				background-color: lightcoral;
+			}
+			.item:focus {
+				outline: none;
+				background-color: coral;
+			}
+			.label {
+				padding: 4px;
+				width: 100px;
+				background-color: lemonchiffon;
+				border-right: 1px solid darkgray;
+			}
+			.track {
+				border: 1px solid darkgray;
+			}
+		</style>
+	</head>
+	<body>
+		<main style="height: 100vh" id="root"></main>
+		<script type="module">
+			import { render, html } from "lit";
+			import { map } from "lit/directives/map.js";
+			import { buildTrack, listOf, seed } from "../dist/test-utils/builder.js";
+			const root = document.querySelector("#root");
+			const usedSeed = seed();
+			const tracks = listOf(buildTrack, { min: 15, max: 100 });
+			const itemSum = tracks.flatMap((track) => track.items).length;
+
+			function getUtilizationPercentage(utilization) {
+				if (typeof utilization === "undefined") return "100%";
+				return `${100 * utilization}%`;
+			}
+
+			const template = html`
+				<mutti-timeline>
+					${map(
+						tracks,
+						(track) => html`
+							<mutti-track class="track">
+								<mutti-label class="label">${track.children}</mutti-label>
+								${map(
+									track.items,
+									(item) => html`
+										<mutti-item
+											class="item"
+											start=${item.startDate}
+											end=${item.endDate}
+											scale=${item.utilization}
+										>
+											<span>${item.children}</span>
+											<small>
+												${getUtilizationPercentage(item.utilization)}
+											</small>
+										</mutti-item>
+									`
+								)}
+							</mutti-track>
+						`
+					)}
+				</mutti-timeline>
+			`;
+
+			console.log(
+				"Rendering",
+				tracks.length,
+				"tracks, which together contain",
+				itemSum,
+				"items."
+			);
+			console.log("Random data has been generated with seed:", usedSeed);
+			render(template, root);
+		</script>
+	</body>
+</html>

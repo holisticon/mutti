@@ -24,9 +24,12 @@
 	"scripts": {
 		"prepare": "husky install",
 		"prepack": "npm run build",
+		"start": "rm -rf dist && tsc -b -w",
 		"build": "rm -rf dist && tsc -b",
 		"format": "prettier --write .",
 		"lint": "tsc --noEmit && eslint . && prettier -c .",
+		"serve": "web-dev-server",
+		"serve:watch": "web-dev-server --watch",
 		"test": "NODE_OPTIONS=--experimental-vm-modules jest",
 		"test:watch": "npm test -- --watch",
 		"test:cov": "npm test -- --coverage"
@@ -60,6 +63,8 @@
 		"@types/jest": "^28.1.6",
 		"@typescript-eslint/eslint-plugin": "^5.33.0",
 		"@typescript-eslint/parser": "^5.33.0",
+		"@web/dev-server": "^0.1.33",
+		"@web/dev-server-esbuild": "^0.3.2",
 		"eslint": "^8.21.0",
 		"eslint-plugin-jest": "^26.8.2",
 		"eslint-plugin-lit": "^1.6.1",
