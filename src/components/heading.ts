@@ -81,9 +81,14 @@ const styles = css`
 @customElement("mutti-heading")
 class MuttiHeadingElement extends LitElement {
 	static override styles = styles;
-	private _format = new MuttiDateFormatter();
+	private _format!: MuttiDateFormatter;
 
 	@property({ type: Boolean }) yearOnly = false;
+
+	override connectedCallback(): void {
+		super.connectedCallback?.();
+		this._format = new MuttiDateFormatter(this.lang);
+	}
 
 	private renderDate(date: MuttiDate) {
 		if (this.yearOnly && !date.isStartOfYear) return nothing;

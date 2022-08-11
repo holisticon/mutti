@@ -1,5 +1,5 @@
 import { css, html, LitElement, TemplateResult } from "lit";
-import { customElement } from "lit/decorators.js";
+import { customElement, property } from "lit/decorators.js";
 import {
 	CameraController,
 	ZoomDetailLevel,
@@ -28,6 +28,9 @@ export class MuttiTimelineElement extends LitElement {
 
 	readonly role = "grid";
 
+	@property()
+	override lang = document.documentElement.lang || navigator.language;
+
 	private cameraController = new CameraController(this, {
 		initialDayOffset: 100,
 	});
@@ -35,6 +38,7 @@ export class MuttiTimelineElement extends LitElement {
 	protected override render(): TemplateResult {
 		return html`
 			<mutti-heading
+				.lang=${this.lang}
 				part="heading"
 				?yearOnly=${this.cameraController.zoomDetail === ZoomDetailLevel.Year}
 			>
