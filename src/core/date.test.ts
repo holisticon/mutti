@@ -1,7 +1,24 @@
-import { MuttiDate } from "./date";
+import { DateString, MuttiDate } from "./date";
 import { buildDate } from "../test-utils/builder";
 
 describe("MuttiDate", () => {
+	describe("getDaysUntil", () => {
+		const cases: [date: DateString, until: DateString, days: number][] = [
+			["2022-04-15", "2022-04-16", 1],
+			["2022-04-15", "2022-04-14", -1],
+			["2022-04-15", "2022-04-15", 0],
+		];
+
+		it.each(cases)(
+			"should return %n days for %s until %s",
+			(date, until, days) => {
+				expect(new MuttiDate(date).getDaysUntil(new MuttiDate(until))).toBe(
+					days
+				);
+			}
+		);
+	});
+
 	describe("isWithinDays", () => {
 		it("should return true when the actual date is the start or end date", () => {
 			const date = buildDate();

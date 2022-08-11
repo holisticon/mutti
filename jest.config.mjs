@@ -8,6 +8,9 @@ const config = {
 	},
 	extensionsToTreatAsEsm: [".ts"],
 	setupFilesAfterEnv: ["<rootDir>/src/test-utils/setup.ts"],
+	moduleNameMapper: {
+		"\\.(.+)\\.js": ".$1",
+	},
 };
 
 export default config;

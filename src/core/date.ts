@@ -74,6 +74,10 @@ export class MuttiDate {
 		return days < 0 ? Math.ceil(days) : Math.round(days);
 	}
 
+	public getDaysFromNow(): number {
+		return MuttiDate.now.getDaysUntil(this);
+	}
+
 	public isLaterOrSameThan(date: MuttiDate): boolean {
 		return this.dateMS >= date.dateMS;
 	}
