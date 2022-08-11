@@ -2,29 +2,23 @@ import { css, html, LitElement, TemplateResult } from "lit";
 import { customElement } from "lit/decorators.js";
 import {
 	CameraController,
-	cameraProp,
+	ZoomDetailLevel,
 } from "../controllers/camera-controller.js";
-import { varX, themeProp } from "../core/properties.js";
+import "./heading.js";
 
 const styles = css`
 	:host {
 		box-sizing: border-box;
+		display: block;
 		touch-action: none;
+	}
 
+	.track-container {
 		position: relative;
 		display: flex;
 		flex-direction: column;
 		overflow-x: hidden;
 		overflow-y: auto;
-	}
-
-	.today {
-		position: absolute;
-		background-color: ${varX(themeProp.todayColor, "red")};
-		width: 2px;
-		height: 100%;
-		transform: translateX(${varX(cameraProp.offset)});
-		will-change: transform;
 	}
 `;
 
@@ -40,8 +34,14 @@ export class MuttiTimelineElement extends LitElement {
 
 	protected override render(): TemplateResult {
 		return html`
-			<slot name="track"></slot>
-			<div class="today" aria-label="Today" title="Today"></div>
+			<mutti-heading
+				part="heading"
+				?yearOnly=${this.cameraController.zoomDetail === ZoomDetailLevel.Year}
+			>
+				<div class="track-container">
+					<slot name="track"></slot>
+				</div>
+			</mutti-heading>
 		`;
 	}
 }

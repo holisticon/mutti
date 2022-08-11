@@ -1,6 +1,12 @@
 import type { LitElement, ReactiveController } from "lit";
 import { Camera, CameraConfig } from "../core/camera.js";
 
+export enum ZoomDetailLevel {
+	Year = 0,
+	Month = 1,
+	Day = 2,
+}
+
 /** Custom CSS property names that are related to the camera functionality. */
 export const cameraProp = {
 	offset: "--mutti-camera-offset",
@@ -20,7 +26,13 @@ export class CameraController implements ReactiveController {
 	) {
 		host.addController(this);
 		this.camera = new Camera(config);
-		this.setHostProperties();
+		this.setHostPropertiesAndUpdate();
+	}
+
+	get zoomDetail(): ZoomDetailLevel {
+		if (this.camera.zoom <= 0.3) return ZoomDetailLevel.Year;
+		if (this.camera.zoom <= 2) return ZoomDetailLevel.Month;
+		return ZoomDetailLevel.Day;
 	}
 
 	hostConnected() {
@@ -45,7 +57,7 @@ export class CameraController implements ReactiveController {
 		this.host.removeEventListener("wheel", this.handleWheel);
 	}
 
-	private setHostProperties() {
+	private setHostPropertiesAndUpdate() {
 		// Setting the CSS properties directly can skip Lit rerenders for these high-performance interactions.
 		this.host.style.setProperty(cameraProp.offset, `${this.camera.offset}px`);
 		this.host.style.setProperty(cameraProp.zoom, this.camera.zoom.toString());
@@ -53,6 +65,7 @@ export class CameraController implements ReactiveController {
 			cameraProp.dayWidth,
 			`${this.camera.dayWidth}px`
 		);
+		this.host.requestUpdate();
 	}
 
 	private handleKeydown = (e: KeyboardEvent) => {
@@ -60,7 +73,7 @@ export class CameraController implements ReactiveController {
 			case "KeyR":
 				if (!e.ctrlKey || e.repeat) return;
 				this.camera.reset();
-				this.setHostProperties();
+				this.setHostPropertiesAndUpdate();
 				break;
 		}
 	};
@@ -80,7 +93,7 @@ export class CameraController implements ReactiveController {
 		if (!this.isPanning) return;
 
 		this.camera.changeOffset(e.pageX - this.mouseX);
-		this.setHostProperties();
+		this.setHostPropertiesAndUpdate();
 		this.mouseX = e.pageX;
 	};
 
@@ -91,6 +104,6 @@ export class CameraController implements ReactiveController {
 		// Dividing the wheel delta by 1000 appears to provide a pleasant zoom experience
 		// that feels neither too slow nor too fast.
 		this.camera.changeZoom((e.deltaY * -1) / 1000);
-		this.setHostProperties();
+		this.setHostPropertiesAndUpdate();
 	};
 }
