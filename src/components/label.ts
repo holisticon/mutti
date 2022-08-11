@@ -5,8 +5,10 @@ const styles = css`
 	:host {
 		box-sizing: border-box;
 		display: block;
-		width: 100%;
-		height: 100%;
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		z-index: 2;
 	}
 `;
 
