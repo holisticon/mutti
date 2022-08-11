@@ -55,7 +55,7 @@ const styles = css`
 		flex-direction: column;
 		position: absolute; // Required for each month to not consume any layout.
 		line-height: 1;
-		padding-left: 4px;
+		padding-inline-start: 4px;
 		transform: translateX(
 			calc(${varX(headingProp.labelOffset)} * ${varX(cameraProp.dayWidth)})
 		);
@@ -68,7 +68,7 @@ const styles = css`
 	}
 
 	.with-line {
-		border-left: 1px solid lightgrey;
+		border-inline-start: 1px solid lightgrey;
 	}
 
 	.spacer {
