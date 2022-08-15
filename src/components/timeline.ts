@@ -39,6 +39,9 @@ export class MuttiTimelineElement extends LitElement {
 		return html`
 			<mutti-heading
 				.lang=${this.lang}
+				.cameraDayWidth=${this.cameraController.dayWidth}
+				.cameraOffset=${this.cameraController.offset}
+				.cameraViewportWidth=${this.cameraController.viewport.width}
 				part="heading"
 				?yearOnly=${this.cameraController.zoomDetail === ZoomDetailLevel.Year}
 			>
