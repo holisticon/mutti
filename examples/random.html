@@ -53,6 +53,10 @@
 				return `${100 * utilization}%`;
 			}
 
+			function handleEvent(e) {
+				console.log(e);
+			}
+
 			const template = html`
 				<mutti-timeline>
 					${map(
@@ -68,6 +72,8 @@
 											start=${item.startDate}
 											end=${item.endDate}
 											scale=${item.utilization}
+											@action=${handleEvent}
+											@delete=${handleEvent}
 										>
 											<span>${item.children}</span>
 											<small>

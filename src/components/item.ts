@@ -1,7 +1,9 @@
 import { css, html, LitElement, PropertyValues, TemplateResult } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { cameraProp } from "../controllers/camera-controller.js";
+import { ItemInteractionsController } from "../controllers/item-interactions-controller.js";
 import { MuttiDate } from "../core/date.js";
+import { ActionEvent } from "../core/events.js";
 import { varX } from "../core/properties.js";
 
 /** Custom CSS property names that are related to items. */
@@ -37,6 +39,7 @@ const styles = css`
 @customElement("mutti-item")
 export class MuttiItemElement extends LitElement {
 	static override styles = styles;
+	private controller = new ItemInteractionsController(this);
 
 	readonly role = "gridcell";
 	override slot = "item";
