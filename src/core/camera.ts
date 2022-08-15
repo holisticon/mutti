@@ -1,3 +1,8 @@
+export interface ViewPort {
+	width: number;
+	height: number;
+}
+
 export interface CameraConfig {
 	initialDayWidth: number;
 	initialDayOffset: number;
@@ -11,6 +16,7 @@ export class Camera {
 
 	private _offset: number;
 	private _zoom: number;
+	private _viewport: ViewPort;
 
 	constructor(config?: Partial<CameraConfig>) {
 		this.config = {
@@ -23,6 +29,7 @@ export class Camera {
 
 		this._offset = this.config.initialDayWidth * this.config.initialDayOffset;
 		this._zoom = this.config.initialZoom;
+		this._viewport = { width: 0, height: 0 };
 	}
 
 	get offset() {
@@ -37,6 +44,10 @@ export class Camera {
 		return this._zoom * this.config.initialDayWidth;
 	}
 
+	get viewport() {
+		return this._viewport;
+	}
+
 	public changeOffset(by: number) {
 		this._offset += by;
 	}
@@ -47,6 +58,10 @@ export class Camera {
 			this._zoom + by,
 			this.config.maxZoom
 		);
+	}
+
+	public changeViewport(width: number, height: number) {
+		this._viewport = { width, height };
 	}
 
 	public reset() {
