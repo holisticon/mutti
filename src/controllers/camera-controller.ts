@@ -1,5 +1,9 @@
 import type { LitElement, ReactiveController } from "lit";
-import { Camera, CameraConfig } from "../core/camera.js";
+import {
+	ResizeController,
+	ResizeValueCallback,
+} from "@lit-labs/observers/resize_controller.js";
+import { Camera, CameraConfig, ViewPort } from "../core/camera.js";
 
 export enum ZoomDetailLevel {
 	Year = 0,
@@ -16,6 +20,7 @@ export const cameraProp = {
 
 export class CameraController implements ReactiveController {
 	private readonly camera: Camera;
+	private readonly resizeController: ResizeController;
 
 	private isPanning = false;
 	private mouseX = 0;
@@ -26,6 +31,9 @@ export class CameraController implements ReactiveController {
 	) {
 		host.addController(this);
 		this.camera = new Camera(config);
+		this.resizeController = new ResizeController(host, {
+			callback: this.handleResize,
+		});
 		this.setHostPropertiesAndUpdate();
 	}
 
@@ -33,6 +41,18 @@ export class CameraController implements ReactiveController {
 		if (this.camera.zoom <= 0.3) return ZoomDetailLevel.Year;
 		if (this.camera.zoom <= 2) return ZoomDetailLevel.Month;
 		return ZoomDetailLevel.Day;
+	}
+
+	get dayWidth(): number {
+		return this.camera.dayWidth;
+	}
+
+	get offset(): number {
+		return this.camera.offset;
+	}
+
+	get viewport(): ViewPort {
+		return this.camera.viewport;
 	}
 
 	hostConnected() {
@@ -67,6 +87,20 @@ export class CameraController implements ReactiveController {
 		);
 		this.host.requestUpdate();
 	}
+
+	private handleResize: ResizeValueCallback = (entries) => {
+		const contentSize = entries[0]?.contentBoxSize[0];
+
+		if (!contentSize) {
+			// Initial setup call
+			const box = this.host.getBoundingClientRect();
+			this.camera.changeViewport(box.width, box.height);
+			return;
+		}
+
+		// The resize controller will request an update
+		this.camera.changeViewport(contentSize.inlineSize, contentSize.blockSize);
+	};
 
 	private handleKeydown = (e: KeyboardEvent) => {
 		switch (e.code) {
