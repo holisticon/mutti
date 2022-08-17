@@ -3,7 +3,7 @@ import { customElement, property } from "lit/decorators.js";
 import { cameraProp } from "../controllers/camera-controller.js";
 import { ItemInteractionsController } from "../controllers/item-interactions-controller.js";
 import { MuttiDate } from "../core/date.js";
-import { ActionEvent } from "../core/events.js";
+import { ItemFocusEvent } from "../core/events.js";
 import { varX } from "../core/properties.js";
 
 /** Custom CSS property names that are related to items. */
@@ -52,6 +52,13 @@ export class MuttiItemElement extends LitElement {
 		7
 	);
 	@property({ type: Number, attribute: false }) subTrack = 1;
+
+	override focus(): void {
+		const shouldContinue = this.dispatchEvent(
+			new ItemFocusEvent(this.start, this.end)
+		);
+		if (shouldContinue) super.focus({ preventScroll: true });
+	}
 
 	protected override willUpdate(changedProperties: PropertyValues): void {
 		if (changedProperties.has("subTrack")) {

@@ -1,5 +1,10 @@
 import type { LitElement, ReactiveController } from "lit";
-import { ActionEvent, DeleteEvent } from "../core/events.js";
+import {
+	ActionEvent,
+	DeleteEvent,
+	FocusChangeEvent,
+	FocusChangeLocation,
+} from "../core/events.js";
 
 export class ItemInteractionsController implements ReactiveController {
 	constructor(private readonly host: LitElement) {
@@ -24,12 +29,32 @@ export class ItemInteractionsController implements ReactiveController {
 			case "Delete":
 				if (!e.repeat) this.delete();
 				break;
+			case "ArrowLeft":
+				e.preventDefault();
+				this.changeFocus("left");
+				break;
+			case "ArrowRight":
+				e.preventDefault();
+				this.changeFocus("right");
+				break;
+			case "ArrowUp":
+				e.preventDefault();
+				this.changeFocus("up");
+				break;
+			case "ArrowDown":
+				e.preventDefault();
+				this.changeFocus("down");
+				break;
 		}
 	};
 
 	private handleDoubleClick = () => {
 		this.action();
 	};
+
+	private changeFocus(where: FocusChangeLocation) {
+		this.host.dispatchEvent(new FocusChangeEvent(where));
+	}
 
 	private delete() {
 		this.host.dispatchEvent(new DeleteEvent());
