@@ -4,6 +4,7 @@ import {
 	ResizeValueCallback,
 } from "@lit-labs/observers/resize_controller.js";
 import { Camera, CameraConfig, ViewPort } from "../core/camera.js";
+import { ItemFocusEvent } from "../core/events.js";
 
 export enum ZoomDetailLevel {
 	Year = 0,
@@ -55,8 +56,13 @@ export class CameraController implements ReactiveController {
 		return this.camera.viewport;
 	}
 
+	get updateConfig() {
+		return this.camera.updateConfig.bind(this.camera);
+	}
+
 	hostConnected() {
 		document.addEventListener("keydown", this.handleKeydown);
+		this.host.addEventListener(ItemFocusEvent.type, this.handleItemFocus);
 
 		this.host.addEventListener("pointerdown", this.handlePointerDown);
 		this.host.addEventListener("pointermove", this.handlePointerMove);
@@ -68,6 +74,7 @@ export class CameraController implements ReactiveController {
 
 	hostDisconnected() {
 		document.removeEventListener("keydown", this.handleKeydown);
+		this.host.removeEventListener(ItemFocusEvent.type, this.handleItemFocus);
 
 		this.host.removeEventListener("pointerdown", this.handlePointerDown);
 		this.host.removeEventListener("pointermove", this.handlePointerMove);
@@ -100,6 +107,18 @@ export class CameraController implements ReactiveController {
 
 		// The resize controller will request an update
 		this.camera.changeViewport(contentSize.inlineSize, contentSize.blockSize);
+	};
+
+	private handleItemFocus = (e: ItemFocusEvent) => {
+		if (e.defaultPrevented) return;
+
+		// Dates are plotted relative to today, which is positioned at the current offset.
+		// Therefore, they are converted to absolute positions on the timeline.
+		const start = this.camera.offset + e.start.getDaysFromNow() * this.dayWidth;
+		const end = this.camera.offset + e.end.getDaysFromNow() * this.dayWidth;
+
+		this.camera.moveRangeIntoViewport(start, end);
+		this.setHostPropertiesAndUpdate();
 	};
 
 	private handleKeydown = (e: KeyboardEvent) => {

@@ -78,16 +78,24 @@ export class MuttiDate {
 		return MuttiDate.now.getDaysUntil(this);
 	}
 
-	public isLaterOrSameThan(date: MuttiDate): boolean {
-		return this.dateMS >= date.dateMS;
+	public isLaterThan(date: MuttiDate): boolean {
+		return this.dateMS > date.dateMS;
 	}
 
-	public isEarlierOrSameThan(date: MuttiDate): boolean {
-		return this.dateMS <= date.dateMS;
+	public isEarlierThan(date: MuttiDate): boolean {
+		return this.dateMS < date.dateMS;
+	}
+
+	public isSameDay(date: MuttiDate): boolean {
+		return this.dateMS === date.dateMS;
 	}
 
 	public isWithinDays(start: MuttiDate, end: MuttiDate): boolean {
-		return this.isLaterOrSameThan(start) && this.isEarlierOrSameThan(end);
+		return (
+			(this.isLaterThan(start) && this.isEarlierThan(end)) ||
+			this.isSameDay(start) ||
+			this.isSameDay(end)
+		);
 	}
 
 	public get isStartOfMonth(): boolean {

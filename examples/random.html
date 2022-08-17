@@ -45,7 +45,7 @@
 			import { buildTrack, listOf, seed } from "../dist/test-utils/builder.js";
 			const root = document.querySelector("#root");
 			const usedSeed = seed();
-			const tracks = listOf(buildTrack, { min: 15, max: 100 });
+			const tracks = listOf(buildTrack, { min: 15, max: 15 });
 			const itemSum = tracks.flatMap((track) => track.items).length;
 
 			function getUtilizationPercentage(utilization) {
@@ -58,7 +58,7 @@
 			}
 
 			const template = html`
-				<mutti-timeline>
+				<mutti-timeline viewportPadding="150">
 					${map(
 						tracks,
 						(track) => html`
