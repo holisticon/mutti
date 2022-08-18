@@ -193,6 +193,8 @@ export class MuttiTrackElement extends LitElement {
 	}
 
 	private applySubTrackInfoToElements(subTracks: SubTracks) {
+		if (subTracks.length === 0) return;
+
 		this.style.setProperty(trackProp.subTracks, `${subTracks.length}`);
 		subTracks.forEach((track, index) =>
 			track.forEach((item) => (item.subTrack = index + 1))
