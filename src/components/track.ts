@@ -21,7 +21,7 @@ const styles = css`
 	.items-container {
 		box-sizing: border-box;
 		display: grid;
-		grid-template-rows: repeat(${varX(trackProp.subTracks)}, 100px);
+		grid-template-rows: repeat(${varX(trackProp.subTracks, "1")}, 100px);
 		align-items: end;
 		gap: ${varX(themeProp.itemGap, "4px")};
 		padding: ${varX(themeProp.itemGap, "4px")} 0;
@@ -71,6 +71,8 @@ export class MuttiTrackElement extends LitElement {
 			}
 		}
 
+		if (subTracks.length === 0) return;
+
 		this.style.setProperty(trackProp.subTracks, `${subTracks.length}`);
 		subTracks.forEach((track, index) => {
 			for (const item of track) {
@@ -107,6 +109,7 @@ export class MuttiTrackElement extends LitElement {
 		return html`
 			<slot name="label"></slot>
 			<div class="items-container">
+				<slot name="static-item"></slot>
 				<slot name="item"></slot>
 			</div>
 		`;

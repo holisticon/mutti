@@ -19,6 +19,7 @@ describe("<mutti-track>", () => {
 		);
 		expect(element).toHaveSlot("label");
 		expect(element).toHaveSlot("item");
+		expect(element).toHaveSlot("static-item");
 	});
 
 	it("should label itself with a containing <mutti-label>", async () => {

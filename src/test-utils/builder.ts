@@ -38,6 +38,7 @@ function oneOf<T>(...args: T[]): T {
 ////////////////////////////////////////////////////////////////////////////////
 
 export interface Item {
+	static: boolean;
 	children: string;
 	utilization?: number;
 	startDate: string;
@@ -66,6 +67,7 @@ export const buildItem = createBuilder<Item>((override) => {
 	const itemLength = faker.datatype.number({ min: 7, max: 500 });
 	const startDate = buildDate();
 	return {
+		static: faker.datatype.boolean(),
 		children: faker.commerce.productName(),
 		startDate: startDate.toString(),
 		endDate: MuttiDate.from(startDate, itemLength).toString(),
