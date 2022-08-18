@@ -16,7 +16,7 @@ export enum ZoomDetailLevel {
 export const cameraProp = {
 	offset: "--mutti-camera-offset",
 	zoom: "--mutti-camera-zoom",
-	dayWidth: "--mutti-dayWidth",
+	dayWidth: "--mutti-day-width",
 };
 
 export class CameraController implements ReactiveController {

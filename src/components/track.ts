@@ -4,6 +4,7 @@ import { cameraProp } from "../controllers/camera-controller.js";
 import { FocusChangeEvent } from "../core/events.js";
 import { varX, themeProp } from "../core/properties.js";
 import { MuttiItemElement } from "./item.js";
+import { MuttiLabelElement } from "./label.js";
 
 /** Custom CSS property names that are related to tracks. */
 const trackProp = {
@@ -21,7 +22,7 @@ const styles = css`
 	.items-container {
 		box-sizing: border-box;
 		display: grid;
-		grid-template-rows: repeat(${varX(trackProp.subTracks)}, 100px);
+		grid-template-rows: repeat(${varX(trackProp.subTracks, "1")}, 100px);
 		align-items: end;
 		gap: ${varX(themeProp.itemGap, "4px")};
 		padding: ${varX(themeProp.itemGap, "4px")} 0;
@@ -53,10 +54,25 @@ export class MuttiTrackElement extends LitElement {
 	protected override firstUpdated(): void {
 		const children = Array.from(this.children);
 
+		const label = children.find<MuttiLabelElement>(
+			(c): c is MuttiLabelElement => c instanceof MuttiLabelElement
+		);
+		this.connectAriaWithLabel(label);
+
 		const items = children.filter(this.isMuttiItem);
 		this.subTracks = this.orderItemsIntoSubTracks(items);
 		this.applySubTrackInfoToElements(this.subTracks);
 		this.fillPositionMap(this.itemPositionMap, this.subTracks);
+	}
+
+	private static trackSequence = 0;
+	private connectAriaWithLabel(label?: MuttiLabelElement) {
+		if (!label) return;
+
+		label.id = label.id
+			? label.id
+			: "mutti-label-" + MuttiTrackElement.trackSequence++;
+		this.setAttribute("aria-labelledby", label.id);
 	}
 
 	/** Called by the <mutti-timeline> with delegated {@link FocusChangeEvent}s. */
@@ -202,6 +218,7 @@ export class MuttiTrackElement extends LitElement {
 		return html`
 			<slot name="label"></slot>
 			<div class="items-container">
+				<slot name="static-item"></slot>
 				<slot name="item"></slot>
 			</div>
 		`;
