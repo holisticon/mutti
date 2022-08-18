@@ -3,6 +3,7 @@ import { customElement } from "lit/decorators.js";
 import { cameraProp } from "../controllers/camera-controller.js";
 import { varX, themeProp } from "../core/properties.js";
 import { MuttiItemElement } from "./item.js";
+import { MuttiLabelElement } from "./label.js";
 
 /** Custom CSS property names that are related to tracks. */
 const trackProp = {
@@ -40,10 +41,25 @@ export class MuttiTrackElement extends LitElement {
 	protected override firstUpdated(): void {
 		const children = Array.from(this.children);
 
+		const label = children.find<MuttiLabelElement>(
+			(c): c is MuttiLabelElement => c instanceof MuttiLabelElement
+		);
+		this.connectAriaWithLabel(label);
+
 		const items = children.filter<MuttiItemElement>(
 			(c): c is MuttiItemElement => c instanceof MuttiItemElement
 		);
 		this.collisionAvoidance(items);
+	}
+
+	private static trackSequence = 0;
+	private connectAriaWithLabel(label?: MuttiLabelElement) {
+		if (!label) return;
+
+		label.id = label.id
+			? label.id
+			: "mutti-label-" + MuttiTrackElement.trackSequence++;
+		this.setAttribute("aria-labelledby", label.id);
 	}
 
 	private collisionAvoidance(items: MuttiItemElement[]) {
