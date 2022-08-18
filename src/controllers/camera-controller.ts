@@ -5,6 +5,7 @@ import {
 } from "@lit-labs/observers/resize_controller.js";
 import { Camera, CameraConfig, ViewPort } from "../core/camera.js";
 import { ItemFocusEvent } from "../core/events.js";
+import { PointerController } from "./pointer-controller.js";
 
 export enum ZoomDetailLevel {
 	Year = 0,
@@ -22,9 +23,7 @@ export const cameraProp = {
 export class CameraController implements ReactiveController {
 	private readonly camera: Camera;
 	private readonly resizeController: ResizeController;
-
-	private isPanning = false;
-	private mouseX = 0;
+	private readonly pointerController: PointerController;
 
 	constructor(
 		private readonly host: LitElement,
@@ -34,6 +33,12 @@ export class CameraController implements ReactiveController {
 		this.camera = new Camera(config);
 		this.resizeController = new ResizeController(host, {
 			callback: this.handleResize,
+		});
+		this.pointerController = new PointerController(host, {
+			moveHandler: (_, delta) => {
+				this.camera.changeOffset(delta.x);
+				this.setHostPropertiesAndUpdate();
+			},
 		});
 		this.setHostPropertiesAndUpdate();
 	}
@@ -63,24 +68,12 @@ export class CameraController implements ReactiveController {
 	hostConnected() {
 		document.addEventListener("keydown", this.handleKeydown);
 		this.host.addEventListener(ItemFocusEvent.type, this.handleItemFocus);
-
-		this.host.addEventListener("pointerdown", this.handlePointerDown);
-		this.host.addEventListener("pointermove", this.handlePointerMove);
-		this.host.addEventListener("pointerup", this.handlePointerUp);
-		this.host.addEventListener("pointerleave", this.handlePointerUp);
-
 		this.host.addEventListener("wheel", this.handleWheel, { passive: false });
 	}
 
 	hostDisconnected() {
 		document.removeEventListener("keydown", this.handleKeydown);
 		this.host.removeEventListener(ItemFocusEvent.type, this.handleItemFocus);
-
-		this.host.removeEventListener("pointerdown", this.handlePointerDown);
-		this.host.removeEventListener("pointermove", this.handlePointerMove);
-		this.host.removeEventListener("pointerup", this.handlePointerUp);
-		this.host.removeEventListener("pointerleave", this.handlePointerUp);
-
 		this.host.removeEventListener("wheel", this.handleWheel);
 	}
 
@@ -129,25 +122,6 @@ export class CameraController implements ReactiveController {
 				this.setHostPropertiesAndUpdate();
 				break;
 		}
-	};
-
-	private handlePointerDown = (e: PointerEvent) => {
-		this.isPanning = true;
-		this.mouseX = e.pageX;
-		(e.target as HTMLElement).setPointerCapture(e.pointerId);
-	};
-
-	private handlePointerUp = (e: PointerEvent) => {
-		this.isPanning = false;
-		(e.target as HTMLElement).releasePointerCapture(e.pointerId);
-	};
-
-	private handlePointerMove = (e: PointerEvent) => {
-		if (!this.isPanning) return;
-
-		this.camera.changeOffset(e.pageX - this.mouseX);
-		this.setHostPropertiesAndUpdate();
-		this.mouseX = e.pageX;
 	};
 
 	private handleWheel = (e: WheelEvent) => {
