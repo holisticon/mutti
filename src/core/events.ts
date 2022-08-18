@@ -14,6 +14,7 @@ declare global {
 		[DeleteEvent.type]: DeleteEvent;
 		[FocusChangeEvent.type]: FocusChangeEvent;
 		[ItemFocusEvent.type]: ItemFocusEvent;
+		[ItemChangeEvent.type]: ItemFocusEvent;
 	}
 }
 
@@ -41,11 +42,11 @@ export class DeleteEvent extends MuttiEvent {
 	}
 }
 
-export type FocusChangeLocation = "left" | "right" | "up" | "down";
+export type Direction = "left" | "right" | "up" | "down";
 export class FocusChangeEvent extends MuttiEvent {
 	static type = "focuschange" as const;
 
-	constructor(public readonly where: FocusChangeLocation) {
+	constructor(public readonly where: Direction) {
 		super(FocusChangeEvent.type, { bubbles: true });
 	}
 
@@ -71,5 +72,20 @@ export class ItemFocusEvent extends MuttiEvent {
 
 	static override match(e: Event): e is ItemFocusEvent {
 		return e instanceof ItemFocusEvent;
+	}
+}
+
+export class ItemChangeEvent extends MuttiEvent {
+	static type = "itemchange" as const;
+
+	constructor(
+		public readonly start: MuttiDate,
+		public readonly end: MuttiDate
+	) {
+		super(ItemChangeEvent.type, { bubbles: true, cancelable: true });
+	}
+
+	static override match(e: Event): e is ItemChangeEvent {
+		return e instanceof ItemChangeEvent;
 	}
 }

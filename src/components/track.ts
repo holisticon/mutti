@@ -1,7 +1,7 @@
 import { css, html, LitElement, TemplateResult } from "lit";
 import { customElement } from "lit/decorators.js";
 import { cameraProp } from "../controllers/camera-controller.js";
-import { FocusChangeEvent } from "../core/events.js";
+import { FocusChangeEvent, ItemChangeEvent } from "../core/events.js";
 import { varX, themeProp } from "../core/properties.js";
 import { MuttiItemElement } from "./item.js";
 import { MuttiLabelElement } from "./label.js";
@@ -49,6 +49,7 @@ export class MuttiTrackElement extends LitElement {
 	constructor() {
 		super();
 		this.addEventListener(FocusChangeEvent.type, this.handleFocusChange);
+		this.addEventListener(ItemChangeEvent.type, this.handleItemChange);
 	}
 
 	protected override firstUpdated(): void {
@@ -88,6 +89,17 @@ export class MuttiTrackElement extends LitElement {
 		this.scrollIntoView({ block: "center" });
 		next.focus();
 	}
+
+	private handleItemChange = async (e: ItemChangeEvent) => {
+		const item = e.target;
+		if (e.defaultPrevented || !this.isMuttiItem(item)) return;
+
+		await item.updateComplete; // Wait until item date updates are flushed.
+		const items = Array.from(this.children).filter(this.isMuttiItem);
+		this.subTracks = this.orderItemsIntoSubTracks(items);
+		this.applySubTrackInfoToElements(this.subTracks);
+		this.fillPositionMap(this.itemPositionMap, this.subTracks);
+	};
 
 	private handleFocusChange = (e: FocusChangeEvent) => {
 		const item = e.target;
@@ -202,6 +214,7 @@ export class MuttiTrackElement extends LitElement {
 	}
 
 	private fillPositionMap(map: ItemPositionMap, subTracks: SubTracks) {
+		map.clear();
 		/* eslint-disable @typescript-eslint/no-non-null-assertion */
 		for (let subTrack = 0; subTrack < subTracks.length; subTrack++) {
 			for (

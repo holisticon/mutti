@@ -3,7 +3,7 @@ import {
 	ActionEvent,
 	DeleteEvent,
 	FocusChangeEvent,
-	FocusChangeLocation,
+	Direction,
 } from "../core/events.js";
 
 export class ItemInteractionsController implements ReactiveController {
@@ -52,8 +52,8 @@ export class ItemInteractionsController implements ReactiveController {
 		this.action();
 	};
 
-	private changeFocus(where: FocusChangeLocation) {
-		this.host.dispatchEvent(new FocusChangeEvent(where));
+	private changeFocus(dir: Direction) {
+		this.host.dispatchEvent(new FocusChangeEvent(dir));
 	}
 
 	private delete() {
