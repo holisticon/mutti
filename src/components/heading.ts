@@ -83,7 +83,7 @@ class MuttiHeadingElement extends LitElement {
 	static override styles = styles;
 	private format!: MuttiDateFormatter;
 	private visibleMonths: MuttiDate[] = [];
-	private populateTriggers?: UpdateTriggers;
+	private calculateTriggers?: UpdateTriggers;
 
 	@property({ type: Boolean }) yearOnly = false;
 	@property({ type: Number, attribute: false }) cameraDayWidth = 0;
@@ -97,22 +97,28 @@ class MuttiHeadingElement extends LitElement {
 
 	protected override shouldUpdate(changedProperties: PropertyValues): boolean {
 		// Update anyway if we cannot optimize based on previous values
-		if (!this.populateTriggers) return true;
+		if (!this.calculateTriggers) return true;
 
 		// Wait until roughly a month/year of difference is created by panning or resizing
 		// before repopulating the visible month.
 		const differenceToSkip =
 			25 * this.cameraDayWidth * (this.yearOnly ? 12 : 1);
 
+		if (changedProperties.has("cameraDayWidth")) {
+			// Zooming changes the offset as well to fix the zoom on the mouse position.
+			// To avoid rendering glitches caused by skipped rerenders from the offset,
+			// ensure that this component rerenders every time the zoom changes.
+			return true;
+		}
 		if (changedProperties.has("cameraOffset")) {
 			const offsetDiff = Math.abs(
-				this.populateTriggers.offset - this.cameraOffset
+				this.calculateTriggers.offset - this.cameraOffset
 			);
 			return offsetDiff >= differenceToSkip;
 		}
 		if (changedProperties.has("cameraViewportWidth")) {
 			const widthDiff = Math.abs(
-				this.populateTriggers.viewportWidth - this.cameraViewportWidth
+				this.calculateTriggers.viewportWidth - this.cameraViewportWidth
 			);
 			return widthDiff >= differenceToSkip;
 		}
@@ -126,19 +132,19 @@ class MuttiHeadingElement extends LitElement {
 			changedProperties.has("cameraOffset") ||
 			changedProperties.has("cameraViewportWidth")
 		) {
-			this.populateTriggers = {
+			this.calculateTriggers = {
 				dayWidth: this.cameraDayWidth,
 				offset: this.cameraOffset,
 				viewportWidth: this.cameraViewportWidth,
 			};
-			this.visibleMonths = this.populateVisibleMonths(
+			this.visibleMonths = this.calculateVisibleMonths(
 				this.yearOnly,
-				this.populateTriggers
+				this.calculateTriggers
 			);
 		}
 	}
 
-	private populateVisibleMonths(
+	private calculateVisibleMonths(
 		skipMonths: boolean,
 		triggers: UpdateTriggers
 	): MuttiDate[] {
