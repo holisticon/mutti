@@ -128,9 +128,15 @@ export class CameraController implements ReactiveController {
 		if (!e.ctrlKey) return;
 		e.preventDefault();
 
+		// There is no reliable API to get the mouse position on the timeline from the event.
+		// Therefore, we calculate it ourself to let the camera zoom towards the mouse position.
+		// Note: getBoundingClientRect is surprisingly fast. Browsers probably cache the values.
+		const hostX = this.host.getBoundingClientRect().x;
+		const mouseX = e.pageX - hostX;
+
 		// Dividing the wheel delta by 1000 appears to provide a pleasant zoom experience
 		// that feels neither too slow nor too fast.
-		this.camera.changeZoom((e.deltaY * -1) / 1000);
+		this.camera.changeZoom((e.deltaY * -1) / 1000, mouseX);
 		this.setHostPropertiesAndUpdate();
 	};
 }

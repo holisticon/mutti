@@ -87,12 +87,16 @@ export class Camera {
 		}
 	}
 
-	public changeZoom(by: number) {
+	public changeZoom(by: number, towards: number) {
+		const offsetInDaysBefore = (this.offset - towards) / this.dayWidth;
 		this._zoom = this.clamp(
 			this.config.minZoom,
 			this._zoom + by,
 			this.config.maxZoom
 		);
+		const offsetInDaysAfter = (this.offset - towards) / this.dayWidth;
+		const daysDelta = offsetInDaysBefore - offsetInDaysAfter;
+		this.changeOffset(daysDelta * this.dayWidth);
 	}
 
 	public changeViewport(width: number, height: number) {
