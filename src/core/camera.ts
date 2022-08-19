@@ -9,27 +9,38 @@ export interface CameraConfig {
 	initialZoom: number;
 	minZoom: number;
 	maxZoom: number;
+	viewportPadding: number;
 }
 
+const defaultConfig: CameraConfig = {
+	initialDayWidth: 4,
+	initialDayOffset: 0,
+	initialZoom: 1,
+	minZoom: 0.1,
+	maxZoom: 2,
+	viewportPadding: 100,
+};
+
 export class Camera {
-	private readonly config: CameraConfig;
+	private config: CameraConfig = {} as CameraConfig;
 
 	private _offset: number;
 	private _zoom: number;
 	private _viewport: ViewPort;
 
 	constructor(config?: Partial<CameraConfig>) {
-		this.config = {
-			initialDayWidth: config?.initialDayWidth ?? 4,
-			initialDayOffset: config?.initialDayOffset ?? 0,
-			initialZoom: config?.initialZoom ?? 1,
-			minZoom: config?.minZoom ?? 0.1,
-			maxZoom: config?.maxZoom ?? 2,
-		};
+		this.updateConfig(config);
 
-		this._offset = this.config.initialDayWidth * this.config.initialDayOffset;
+		this._offset = this.initialOffset;
 		this._zoom = this.config.initialZoom;
 		this._viewport = { width: 0, height: 0 };
+	}
+
+	private get initialOffset() {
+		return (
+			this.config.initialDayWidth * this.config.initialDayOffset +
+			this.config.viewportPadding
+		);
 	}
 
 	get offset() {
@@ -48,8 +59,32 @@ export class Camera {
 		return this._viewport;
 	}
 
+	public updateConfig(config?: Partial<CameraConfig>): CameraConfig {
+		this.config = {
+			...defaultConfig,
+			...this.config,
+			...config,
+		};
+		return this.config;
+	}
+
 	public changeOffset(by: number) {
 		this._offset += by;
+	}
+
+	/** Changes the offset to display the given range in the viewport. */
+	public moveRangeIntoViewport(start: number, end: number) {
+		const leftPadded = this.config.viewportPadding;
+		const rightPadded = this.viewport.width - this.config.viewportPadding;
+
+		switch (true) {
+			case start >= leftPadded && end <= rightPadded:
+				return;
+			case start < leftPadded:
+				return this.changeOffset(leftPadded - start);
+			case true:
+				return this.changeOffset(rightPadded - end);
+		}
 	}
 
 	public changeZoom(by: number, towards: number) {
@@ -70,7 +105,7 @@ export class Camera {
 
 	public reset() {
 		this._zoom = this.config.initialZoom;
-		this._offset = this.config.initialDayWidth * this.config.initialDayOffset;
+		this._offset = this.initialOffset;
 	}
 
 	private clamp(min: number, actual: number, max: number): number {
