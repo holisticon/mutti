@@ -27,9 +27,9 @@ export class Camera {
 			maxZoom: config?.maxZoom ?? 2,
 		};
 
-		this._offset = this.config.initialDayWidth * this.config.initialDayOffset;
 		this._zoom = this.config.initialZoom;
 		this._viewport = { width: 0, height: 0 };
+		this._offset = this.dayWidth * this.config.initialDayOffset;
 	}
 
 	get offset() {
