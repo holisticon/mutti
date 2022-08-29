@@ -2,6 +2,12 @@ import { DateString, MuttiDate } from "./date";
 import { buildDate } from "../test-utils/builder";
 
 describe("MuttiDate", () => {
+	it("should throw an error if constructed with an invalid date-string", () => {
+		const call = () => new MuttiDate("22-01-01");
+
+		expect(call).toThrowError(/cannot be parsed as a date/);
+	});
+
 	describe("getDaysUntil", () => {
 		const cases: [date: DateString, until: DateString, days: number][] = [
 			["2022-04-15", "2022-04-16", 1],

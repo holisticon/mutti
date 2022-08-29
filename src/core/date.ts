@@ -1,4 +1,5 @@
 import type { ComplexAttributeConverter } from "lit";
+import { invariant } from "../utils/invariant.js";
 
 /** @example "2022-07-17" */
 export type DateString = string;
@@ -18,7 +19,7 @@ export class MuttiDate {
 
 	constructor(date?: DateString | DateMS) {
 		this.date = date ? new Date(date) : new Date();
-		this.assertValidDate(this.date, date ?? "Now");
+		invariant(this.date.getTime(), `${date} cannot be parsed as a date.`);
 
 		this.dateMS = this.date.getTime();
 		this.year = this.date.getFullYear();
@@ -29,14 +30,6 @@ export class MuttiDate {
 	static from(date: MuttiDate, days: number): MuttiDate {
 		const time = date.dateMS + days * MuttiDate.millisecondsPerDay;
 		return new MuttiDate(time);
-	}
-
-	private assertValidDate(
-		date: Date,
-		dateString: DateString | DateMS
-	): asserts date {
-		if (isNaN(date.getTime()))
-			throw new TypeError(`${dateString} cannot be converted to a valid date.`);
 	}
 
 	public get nextMonth(): MuttiDate {

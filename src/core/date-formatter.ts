@@ -1,3 +1,4 @@
+import { invariant } from "../utils/invariant.js";
 import type { MuttiDate } from "./date.js";
 
 /** Creates readable representations of different parts of an {@link MuttiDate}. */
@@ -15,7 +16,7 @@ export class MuttiDateFormatter {
 	public getMonth(date: MuttiDate) {
 		const parts = this.format.formatToParts(date.date);
 		const month = parts.find((part) => part.type === "month");
-		if (!month) throw new Error("Failed to format the given date.");
+		invariant(month);
 
 		return month.value;
 	}
