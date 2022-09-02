@@ -38,9 +38,9 @@ const styles = css`
 export class MuttiItemElement extends LitElement {
 	static override styles = styles;
 
-	readonly role = "gridcell";
-	override slot = "item";
-	override tabIndex = 0;
+	@property({ reflect: true }) readonly role = "gridcell";
+	@property({ reflect: true }) override slot = "item";
+	@property({ reflect: true }) override tabIndex = 0;
 
 	@property({ type: Number }) scale = 1;
 	@property({ converter: MuttiDate.converter }) start = MuttiDate.now;

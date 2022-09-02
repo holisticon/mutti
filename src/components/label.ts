@@ -1,5 +1,5 @@
 import { css, html, LitElement, TemplateResult } from "lit";
-import { customElement } from "lit/decorators.js";
+import { customElement, property } from "lit/decorators.js";
 
 const styles = css`
 	:host {
@@ -16,8 +16,8 @@ const styles = css`
 export class MuttiLabelElement extends LitElement {
 	static override styles = styles;
 
-	readonly role = "rowheader";
-	override slot = "label";
+	@property({ reflect: true }) readonly role = "rowheader";
+	@property({ reflect: true }) override slot = "label";
 
 	protected override render(): TemplateResult {
 		return html`<slot></slot>`;

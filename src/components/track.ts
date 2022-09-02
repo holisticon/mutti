@@ -1,5 +1,5 @@
 import { css, html, LitElement, TemplateResult } from "lit";
-import { customElement } from "lit/decorators.js";
+import { customElement, property } from "lit/decorators.js";
 import { cameraProp } from "../controllers/camera-controller.js";
 import { varX, themeProp } from "../core/properties.js";
 import { MuttiItemElement } from "./item.js";
@@ -35,8 +35,8 @@ const styles = css`
 export class MuttiTrackElement extends LitElement {
 	static override styles = styles;
 
-	readonly role = "row";
-	override slot = "track";
+	@property({ reflect: true }) readonly role = "row";
+	@property({ reflect: true }) override slot = "track";
 
 	protected override firstUpdated(): void {
 		const children = Array.from(this.children);

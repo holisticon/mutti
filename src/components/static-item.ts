@@ -42,8 +42,8 @@ const styles = css`
 export class MuttiStaticItemElement extends LitElement {
 	static override styles = styles;
 
-	readonly role = "gridcell";
-	override slot = "static-item";
+	@property({ reflect: true }) readonly role = "gridcell";
+	@property({ reflect: true }) override slot = "static-item";
 
 	@property({ converter: MuttiDate.converter }) start = MuttiDate.now;
 	@property({ converter: MuttiDate.converter }) end = MuttiDate.from(
