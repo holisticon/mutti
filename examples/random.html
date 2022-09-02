@@ -44,6 +44,15 @@
 	<body>
 		<main id="root"></main>
 		<script type="module">
+			// Ensure that each element can be constructed without being mounted.
+			// The error is not thrown in a happy-dom environment so it cannot be unit tested.
+			const timeline = document.createElement("mutti-timeline");
+			const track = document.createElement("mutti-track");
+			const label = document.createElement("mutti-label");
+			const item = document.createElement("mutti-item");
+			const staticItem = document.createElement("mutti-static-item");
+		</script>
+		<script type="module">
 			import { render, html } from "lit";
 			import { map } from "lit/directives/map.js";
 			import { buildTrack, listOf, seed } from "../dist/test-utils/builder.js";

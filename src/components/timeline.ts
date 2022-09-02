@@ -26,7 +26,7 @@ const styles = css`
 export class MuttiTimelineElement extends LitElement {
 	static override styles = styles;
 
-	readonly role = "grid";
+	@property({ reflect: true }) readonly role = "grid";
 
 	@property()
 	override lang = document.documentElement.lang || navigator.language;

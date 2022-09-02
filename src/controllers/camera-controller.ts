@@ -34,7 +34,6 @@ export class CameraController implements ReactiveController {
 		this.resizeController = new ResizeController(host, {
 			callback: this.handleResize,
 		});
-		this.setHostPropertiesAndUpdate();
 	}
 
 	get zoomDetail(): ZoomDetailLevel {
@@ -64,6 +63,7 @@ export class CameraController implements ReactiveController {
 		this.host.addEventListener("pointerleave", this.handlePointerUp);
 
 		this.host.addEventListener("wheel", this.handleWheel, { passive: false });
+		this.setHostPropertiesAndUpdate();
 	}
 
 	hostDisconnected() {
